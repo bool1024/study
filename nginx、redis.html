@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="file:///${exe}/scripts/highlight.styles/${SyntaxHighlightStyleName}.css" />
+		<style>
+			body, table{font-family: 微软雅黑}
+			
+			table{border-collapse: collapse; border: 1px solid gray; border-width: 2px 1px 2px 1px;}
+			th{border: 1px solid gray; padding: 4px; background-color: #ddd;}
+			td{border: 1px solid gray; padding: 4px;}
+			tr:nth-child(2n){background-color: #f8f8f8;}
+			pre{border: 2px solid #d6d6d6; padding: 0px; border-radius: 3px;}
+		</style>
+	</head>
+	<body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+		<div><span style="font-size: x-large; font-weight: bold;"><a href="https://blog.csdn.net/u010648555/article/details/79427606">https://blog.csdn.net/u010648555/article/details/79427606</a></span>
+		</div>
+		<div><a href="https://blog.csdn.net/u010648555/article/details/79430105">https://blog.csdn.net/u010648555/article/details/79430105</a>
+		</div>
+		<div><br />
+		</div>
+		<div><a href="https://blog.csdn.net/u010648555/article/details/79471034">https://blog.csdn.net/u010648555/article/details/79471034</a>
+		</div>
+		<div><br />
+		</div>
+		<div><a href="https://blog.csdn.net/u012702547/article/details/72991283">https://blog.csdn.net/u012702547/article/details/72991283</a>
+		</div>
+		<div><span style="font-size: x-large; font-weight: bold; "><br /></span>
+		</div>
+		<div><span style="font-size: x-large; font-weight: bold;">Redis主从复制简单介绍</span>
+		</div>
+		<div>为了使得集群在一部分节点下线或者无法与集群的大多数节点进行通讯的情况下，仍然可以正常运作，Redis集群对节点使用了主从复制功能：<span style="color: rgb(255, 0, 0);">集群中的每个节点都有1个至N个复制品（replica），其中一个复制为主从节点（master），而其余的N-1个复制品为从节点（slave）</span>。
+		</div>
+		<div><br />
+		</div>
+		<div>简单来说就是一个主节点master可以拥有一个甚至多个从节点的slave，而一个slave又可以拥有多个slave，如此下去，形成了强大的多级服务器集群架构。
+		</div>
+		<div><br />
+		</div>
+		<div>主从节点读写场景：
+		</div>
+		<div>
+			<ul>
+				<li>主节点以写为主（可写也可以读），从节点只能读不能写入！（读写分离场景）
+				</li>
+				<li>主节点写入的数据会同步（不是准实时的）到slave上，这样如果主节点出现故障，数据丢失，则可以通过slave进行恢复【容灾恢复场景，注：因为数据不是实时同步的，可能会存在从slave恢复数据后有数据丢失问题】
+				</li>
+			</ul>
+			<div>综上，redis主从复制有以下特点：
+			</div>
+		</div>
+		<div>
+			<ol>
+				<li>一个master可以有多个slave
+				</li>
+				<li>除了多个slave连到相同的master外，slave也可以连接其他slave形成图状结构
+				</li>
+				<li>主从复制不会阻塞master。也就是说当一个或多个slave与master进行初次同步数据时，master可以基础处理client发来的请求。相反slave在初次同步数据时则会阻塞不能处理client请求
+				</li>
+				<li>主从复制可以用来提高系统的可伸缩性，我们可以用多个slave专门用于client的读请求，比如sort操作可以使用slave来处理。也可以用来做简单的数据冗余
+				</li>
+				<li>可以在master禁用数据持久化，只需要注释掉master配置文件中的所有save配置，然后值在slave上配置数据持久化
+				</li>
+				<li>可以用于读写分离和容灾恢复
+				</li>
+			</ol>
+			<div><br />
+			</div>
+		</div>
+		<div><span style="font-size: x-large; font-weight: bold;">Redis主从复制常用的几种方式</span>
+		</div>
+		<div>
+			<ol>
+				<li>一主二仆A（B、C），一个master两个slave
+				</li>
+				<li>薪火相传（去中心化）A-B-C，B既是主节点（C的主节点），又是从节点（A的从节点）
+				</li>
+				<li>反客为主（主节点down掉后，手动操作升级从节点为主节点）&amp;哨兵模式（主节点down掉后，自动升级从节点为主节点）
+				</li>
+			</ol>
+			<div><br />
+			</div>
+		</div>
+		<div>Redis主从复制环境的搭建（一主二仆）
+		</div>
+		<div>1.下载windows环境的redis安装包，下载完成后解压并复制为三份，分别以-6379、-6380、-6381后缀来命名
+		</div>
+		<div>2.修改redis.windows.conf文件，6379文件夹不做修改，6380修改如下：
+		</div>
+		<div>
+			<pre>
+<code id="ID_162F072F5DD" class="no-highlight"><ol><li>port 6380</li><li># slaveof &lt;masterip&gt; &lt;masterport&gt;</li><li>slaveof 127.0.0.1 6379</li></ol></code></pre>
+			<div>6381文件夹修改如下：
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_162F073611B" class="no-highlight"><ol><li>port 6381</li><li># slaveof &lt;masterip&gt; &lt;masterport&gt;</li><li>slaveof 127.0.0.1 6379</li></ol></code></pre>
+			<div><br />
+			</div>
+		</div>
+	</body>
+</html>
