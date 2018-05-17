@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="file:///${exe}/scripts/highlight.styles/${SyntaxHighlightStyleName}.css" />
+		<style>
+			table{border-collapse: collapse; border: 1px solid gray; border-width: 2px 1px 2px 1px;}
+			th{border: 1px solid gray; padding: 4px; background-color: #ddd;}
+			td{border: 1px solid gray; padding: 4px;}
+			tr:nth-child(2n){background-color: #f8f8f8;}
+			pre{border: 2px solid #d6d6d6; padding: 0px; border-radius: 3px;}
+		</style>
+	</head>
+	<body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+		<div><span style="font-family: 微软雅黑; font-size: large; font-weight: bold;">List转换为数组</span>
+		</div>
+		<div><span style="font-family: 微软雅黑;">
+			<pre>
+<code id="ID_16367D3BED7" class="lang-java hljs">Foo[] array = list.toArray(<span class="hljs-keyword">new</span> Foo[list.size()]);</code></pre>
+			<div>虽然，上面的方法十分简洁，但是有使用的局限性。<span style="color: rgb(255, 0, 0);">要求对应数组必须是构造类型</span>。对于基本类型的数组，还是得老老实实用下面的方法：
+			</div>
+			<div>
+				<pre>
+<code id="ID_16367D67DB4" class="lang-java hljs">List&lt;Integer&gt; list = ...;
+<span class="hljs-keyword">int</span>[] array = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[list.size()];
+<span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; list.size(); i ++)
+    array[i] = list.get(i);</code></pre>
+				<div>如果使用java1.8新特性可以这么使用：
+				</div>
+			</div>
+			<div>
+				<pre>
+<code id="ID_16367D768DE" class="lang-java hljs">String[] strs = list.stream().toArray(String[] :: <span class="hljs-keyword">new</span>);</code></pre>
+				<div><br />
+				</div>
+			</div>
+			<div><span style="font-size: large; font-weight: bold;">数组转换为List</span>
+			</div>
+			<div>
+				<pre>
+<code id="ID_16367D96465" class="lang-java hljs">Integer[] spam = <span class="hljs-keyword">new</span> Integer[] {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>};
+List&lt;Integer&gt; list = Arrays.asList(spam);</code></pre>
+				<div>但是，这样生成的List是只读的，当你做list.add(1)时，会抛出java.lang.UnsupportedOperationException的异常。解决办法是：
+				</div>
+			</div>
+			<div>
+				<pre>
+<code id="ID_16367DADEA1" class="lang-java hljs">Integer[] values = {<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">7</span>};
+List&lt;Integer&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;Integer&gt;(Arrays.asList(values));</code></pre>
+				<div>如果使用java1.8新特性可以这么使用：
+				</div>
+			</div>
+			<div>
+				<pre>
+<code id="ID_16367DC5382" class="lang-java hljs"><span class="hljs-keyword">int</span>[] spam = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[] {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>};
+Arrays.stream(spam).boxed().collect(Collectors.toList());</code></pre>
+				<div><br />
+				</div>
+			</div></span>
+		</div>
+	</body>
+</html>
