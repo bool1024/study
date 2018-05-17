@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="file:///${exe}/scripts/highlight.styles/${SyntaxHighlightStyleName}.css" />
+		<style>
+			body, table{font-family: 微软雅黑}
+			
+			table{border-collapse: collapse; border: 1px solid gray; border-width: 2px 1px 2px 1px;}
+			th{border: 1px solid gray; padding: 4px; background-color: #ddd;}
+			td{border: 1px solid gray; padding: 4px;}
+			tr:nth-child(2n){background-color: #f8f8f8;}
+			pre{border: 2px solid #d6d6d6; padding: 0px; border-radius: 3px;}
+		</style>
+	</head>
+	<body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+		<div>对于很多开发人员,相信都有过对URL和URI区分困扰的时候,似乎两者是一体的.下面,简单说明一下两者的区别.
+		</div>
+		<div>经验式理解:<span style="color: rgb(255, 0, 0);">http://localhost:8080</span><span style="color: rgb(51, 153, 102);">/myweb/hello.html</span>
+		</div>
+		<div>以上web地址，红色字体部分+绿色字体部分=URL；绿色字体部分=URI。这是大部分程序员对两者理解的一个典型代表。
+		</div>
+		<div><br />
+		</div>
+		<div>现在，我们来看下两者的定义：
+		</div>
+		<div>URL（Uniform Resource Locator）：统一资源定位符
+		</div>
+		<div>顾名思义，URL就是一个表示资源位置的字符串，基本的URL格式为：&quot;协议://IP地址/路径和文件名&quot;，如：ftp://ftp.is.co.za/rfc/rfc1808.txt
+		</div>
+		<div><br />
+		</div>
+		<div><span style="color: rgb(255, 0, 0);">最重要的一点，URL对于我们而言，就是将URL输入到浏览器地址栏上就可以访问到对应资源</span>
+		</div>
+		<div><span style="color: rgb(255, 0, 0);"><br /></span>
+		</div>
+		<div>URI（Uniform Resource Identifier）：统一资源标识符
+		</div>
+		<div>“A Uniform Resource Identifier（URI）是一个紧凑的字符串用来标示抽象或物理资源”，这是来自RFC中的定义。可以看出其和URL的目的是相同的，都是通过使用字符串来标示资源，这样看来，像开头绿色字体部分的字符串似乎并不能完整标识资源。
+		</div>
+		<div><br />
+		</div>
+		<div>现在，我们再引入一个概念。
+		</div>
+		<div>URN（Uniform Resource Name）：统一资源名称
+		</div>
+		<div>唯一标识一个实体的标识符，但是不给出实体的位置，通过引用一个或多个URL来实现标识指针功能。现实中可见的使用：<span style="color: rgb(255, 0, 0);">P2P下载中使用的磁力链接</span>。
+		</div>
+		<div><br />
+		</div>
+		<div>三者的目的都是标识处于互联网世界中的资源，它们的关系如下：
+		</div>
+		<div><span style="color: rgb(255, 0, 0);">URI是包含URL or URN or（介于两者之间的模糊地带）</span>
+		</div>
+		<div><span style="background-color: rgb(255, 255, 255); "><span style="color: rgb(255, 0, 0);">简言之，URI包括URL及URN，上述所说的URL及URN都可以称之为URI，反之，逆命题URI是URL并不成立</span>。</span>
+		</div>
+		<div><span style="background-color: rgb(255, 255, 255); "><br /></span>
+		</div>
+		<div><span style="background-color: rgb(255, 255, 255); ">再来看几个例子：</span>
+		</div>
+		<div><span style="background-color: rgb(255, 255, 255); ">
+			<pre>
+<code id="ID_16338664277" class="no-highlight">ftp://ftp.is.co.za/rfc/rfc1808.txt (*)
+
+http://www.ietf.org/rfc/rfc2396.txt (*)
+
+ldap://[2001:db8::7]/c=GB?objectClass?one (*)
+
+mailto:John.Doe@example.com (*)
+
+news:comp.infosystems.www.servers.unix (*)
+
+tel:+1-816-555-1212
+
+telnet://192.0.2.16:80/ (*)
+
+urn:oasis:names:specification:docbook:dtd:xml:4.1.2</code></pre>
+			<div>上述例子均为URI，其中带有*结尾的例子为URL。不难发现，URL的例子复制粘贴到浏览器地址栏可以直接访问到资源，也就是说URL提供了访问机制，这是判断是否为URL的决定性因素。
+			</div>
+			<div><br />
+			</div>
+			<div>总结：
+			</div>
+			<div>URL就是URI。但是对于一个标识符一个准确说法却是有考究上的帮助。当我们替代WEB地址时，URI毫无疑问是最保险的说法。
+			</div>
+			<div>我们经常使用的URI不是严格技术意义上的URL。例如：你需要的文件在files.hp.com。这是URI，但不是URL。因为系统可能会对很多协议和端口都做出正确的放映，在http://files.hp.com和ftp://files.hp.com可能得到完全不同的内容。
+			</div>
+			<div><br />
+			</div>
+			<div>由此可见，URI站在了技术正确性的面上，要严谨请使用URI吧。而且，“URL”也正在被“弃用”。
+			</div>
+			<div><br />
+			</div>
+			<div><br />
+			</div></span>
+		</div>
+	</body>
+</html>
