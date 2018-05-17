@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="file:///${exe}/scripts/highlight.styles/${SyntaxHighlightStyleName}.css" />
+		<style>
+			body, table{font-family: 微软雅黑}
+			
+			table{border-collapse: collapse; border: 1px solid gray; border-width: 2px 1px 2px 1px;}
+			th{border: 1px solid gray; padding: 4px; background-color: #ddd;}
+			td{border: 1px solid gray; padding: 4px;}
+			tr:nth-child(2n){background-color: #f8f8f8;}
+			pre{border: 2px solid #d6d6d6; padding: 0px; border-radius: 3px;}
+		</style>
+	</head>
+	<body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+		<div><span style="font-size: 13.5pt"><strong>Log4j的概念</strong></span>
+		</div>
+		<div>Log4j中有三个主要的组件，它们分别是Logger、Appender、Layout，Log4j允许开发人员定义多个Logger，每个Logger拥有自己的名字，Logger之间通过名字来表明隶属关系。有一个Logger称为Root，它永远存在，且不能通过名字检索或引用，可以通过Logger.getRootLogger()方法获得，其他Logger通过Logger.getLogger(String name)方法获得。
+		</div>
+		<div>Appender则是用来指明将所有的log信息存放到什么地方，Log4j中支持多种Appender，如console、files、GUI components、NT Event Loggers等，一个Logger可以拥有多个Appender，也就是可以将log信息输出到屏幕，同时存储到一个文件汇总。
+		</div>
+		<div>Layout的作用是控制log信息的输出方式，也就是格式化输出的信息。
+		</div>
+		<div><br />
+		</div>
+		<div>日志记录的优先级，分为OFF、FATAL、ERROR、WARN、INFO、DEBUG、ALL。Log4j建议只使用四个级别，优先级从高到低分别是ERROR、WARN、INFO、DEBUG。
+		</div>
+		<div>
+			<ul>
+				<li>OFF 最高等级，用于关闭所有的日志记录。
+				</li>
+				<li>FATAL 指出每个严重的错误事件将会导致应用程序的退出。
+				</li>
+				<li>ERROR 指出虽然发生错误事件，但仍然不影响系统的继续运行。
+				</li>
+				<li>WARN 表明会出现潜在的错误情形。
+				</li>
+				<li>INFO 一般用于粗粒度级别上，强调应用程序的运行全程。
+				</li>
+				<li>DEBUG 一般用于细粒度级别上，对调试应用程序非常有帮助。
+				</li>
+				<li>ALL 最低等级，用于打开多有的日志记录
+				</li>
+			</ul>
+			<div><br />
+			</div>
+		</div>
+		<div><span style="font-size: 13.5pt"><strong>Log4j配置文件</strong></span>
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A4055EF" class="lang-xml hljs">log4j.rootLogger=debug,stdout, R
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+
+# Pattern to output the caller's file name and line number.
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] (%F:%L) - %m%n
+
+log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R.File=example.log
+log4j.appender.R.MaxFileSize= 100KB
+
+# Keep one backup file
+log4j.appender.R.MaxBackupIndex=1
+
+log4j.appender.R.layout=org.apache.log4j.PatternLayout
+log4j.appender.R.layout.ConversionPattern=%p %t %c - %m%n</code></pre>
+			<div>首先，是设置root，格式为log4j.rootLogger=[level],appenderName,...,其中level就是设置需要输出信息的级别，后面appenderName指明输出的目的地（输出到哪个地方）。可以同时指定多个输出目的地。
+			</div>
+			<div><br />
+			</div>
+			<div>配置日志信息输出目的地Appender，其语法为
+			</div>
+			<div>log4j.appender.appenderName=xx.xx.class
+			</div>
+			<div>log4j.appender.appenderName.opinion1=value1
+			</div>
+			<div>...
+			</div>
+		</div>
+		<div>log4j.appender.appenderName.opinionN=valueN
+		</div>
+		<div><br />
+		</div>
+		<div>Log4j提供的appender有以下几种：
+		</div>
+		<div>
+			<ul>
+				<li>org.apache.log4j.ConsoleAppender（控制台）
+				</li>
+				<li>org.apache.log4j.FileAppender（文件）
+				</li>
+				<li>org.apache.log4j.DailyRollingFileAppender（每天产生一个日志文件）
+				</li>
+				<li>org.apache.log4j.RollingFileAppender（文件大小到达指定大小的时候产生新文件）
+				</li>
+				<li>org.apache.log4j.WriterAppender（将日志信息以流格式发送到任意指定的地方）
+				</li>
+			</ul>
+			<div>配置日志信息的格式（布局），其语法为：
+			</div>
+		</div>
+		<div>log4j.appender.appenderName.layout=xx.xx.class
+		</div>
+		<div>log4j.appender.appenderName.layout.option1=value1
+		</div>
+		<div>...
+		</div>
+		<div>log4j.appender.appenderName.layout.optionN=valueN
+		</div>
+		<div><br />
+		</div>
+		<div>Log4j提供的layout有以下几种：
+		</div>
+		<div>
+			<ul>
+				<li>org.apache.log4j.HTMLLayout（以HTML表格形式布局）
+				</li>
+				<li>org.apache.log4j.PatternLayout（可以灵活地指定布局模式）
+				</li>
+				<li>org.apache.log4j.SimpleLayout（包含日志信息的级别和信息字符串）
+				</li>
+				<li>org.apache.log4j.TTCCLayout（包含日志产生的时间、线程、类别等信息）
+				</li>
+			</ul>
+			<div>Log4j采用类似C语言中的printf函数的打印格式格式化日志信息，打印参数如下：%m输出代码到指定的消息
+			</div>
+		</div>
+		<div>
+			<ul>
+				<li>%p 输出优先级，即DEBUG、INFO、WARN、ERROR、FATAL
+				</li>
+				<li>%r 输出自应用启动到输出该log信息耗费的毫秒数
+				</li>
+				<li>%c 输出所属的类目，通常就是所在的类的全名
+				</li>
+				<li>%t 输出产生该日志事件的线程名
+				</li>
+				<li>%n 输出一个回车换行符，Windows平台为“\r\n”，Unix平台为“\n”
+				</li>
+				<li>%d 输出日志时间点的日期或时间，默认格式为ISO8601，也可以在其后指定格式，比如%d{yyy MMM dd HH:mm:ss,SSS},输出类似2002年10月18日22:10&quot;19,453
+				</li>
+				<li>%l 输出日志事件的发生位置，包括类目名、发生的线程，以及在代码中的行数。例如:Testlog4.main(TestLog4.java:10)
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>
