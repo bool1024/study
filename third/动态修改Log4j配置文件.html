@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="file:///${exe}/scripts/highlight.styles/${SyntaxHighlightStyleName}.css" />
+		<style>
+			body, table{font-family: 微软雅黑}
+			
+			table{border-collapse: collapse; border: 1px solid gray; border-width: 2px 1px 2px 1px;}
+			th{border: 1px solid gray; padding: 4px; background-color: #ddd;}
+			td{border: 1px solid gray; padding: 4px;}
+			tr:nth-child(2n){background-color: #f8f8f8;}
+			pre{border: 2px solid #d6d6d6; padding: 0px; border-radius: 3px;}
+		</style>
+	</head>
+	<body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+		<div>Log4j可以通过下面的方法，启动配置监听器（看门狗），能够在指定时间内监控配置文件的改变
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A5FBCCB" class="lang-xml hljs">PropertyConfigurator.configureAndWatch(path, delay);    //间隔特定时间，检测文件是否修改，自动重新读取配置</code></pre>
+			<div>具体实现过程：
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A64D8B4" class="lang-java hljs"><ol><li><span class="hljs-keyword">package</span> log4j;</li><li></li><li><span class="hljs-keyword">import</span> org.apache.log4j.Logger;</li><li><span class="hljs-keyword">import</span> org.apache.log4j.PropertyConfigurator;</li><li></li><li><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AutoLoadLog4jConfig</span> </span>{</li><li>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger LOGGER = Logger.getLogger(AutoLoadLog4jConfig.class);</li><li>  </li><li>  <span class="hljs-comment">//默认值为1秒</span></li><li>  <span class="hljs-keyword">private</span> <span class="hljs-keyword">long</span> delay = <span class="hljs-number">1000</span>;</li><li>  </li><li>  <span class="hljs-comment">/**</span></li><li>   * 装载log4j配置文件</li><li>   */</li><li>  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">load</span><span class="hljs-params">()</span></span>{</li><li>    String path = <span class="hljs-string">"xxx/log4j-app.properties"</span>;</li><li>    LOGGER.warn(<span class="hljs-string">"log4j configfile path="</span> + path + <span class="hljs-string">" delay="</span> + delay);</li><li>    PropertyConfigurator.configureAndWatch(path, delay);</li><li>  }</li><li>}</li></ol></code></pre>
+		</div>
+		<div>
+			<div>XML配置如下：
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A658A7C" class="lang-xml hljs"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"autoLoadLog4jConfig"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.huawei.netmatrix.vpnrestore.sdk.util.AutoLoadLog4jConfig"</span> <span class="hljs-attr">init-method</span>=<span class="hljs-string">"load"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- 定时刷新log4j的配置文件，间隔时间配置为5秒 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"delay"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"5000"</span>/&gt;</span> 
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre>
+			<div>通过init-method方法，让服务启动时，调用AutoLoadLog4jConfig里的load方法，进而启动了监控线程。
+			</div>
+		</div>
+		<div><br />
+		</div>
+		<div>测试：修改配置文件，5秒之后就可以看到新级别的打印
+		</div>
+	</body>
+</html>
