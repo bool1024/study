@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="file:///${exe}/scripts/highlight.styles/${SyntaxHighlightStyleName}.css" />
+		<style>
+			body, table{font-family: 微软雅黑}
+			
+			table{border-collapse: collapse; border: 1px solid gray; border-width: 2px 1px 2px 1px;}
+			th{border: 1px solid gray; padding: 4px; background-color: #ddd;}
+			td{border: 1px solid gray; padding: 4px;}
+			tr:nth-child(2n){background-color: #f8f8f8;}
+			pre{border: 2px solid #d6d6d6; padding: 0px; border-radius: 3px;}
+		</style>
+	</head>
+	<body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+		<div><span style="font-size: x-large; font-weight: bold;">相同点</span>
+		</div>
+		<div>HashMap和Hashtable都是存储“键值对（key-value）”的散列表。存储的思想都是：通过table数组存储，数组的每一个元素都是一个Entry；而一个Entry就是一个单向链表，Entry链表中的每一个节点保存了key-value键值对数据。
+		</div>
+		<div><br />
+		</div>
+		<div>添加key-value键值对：首先，根据key值计算出哈希值，再计算出数组索引。然后，根据数组索引找到Entry（单向链表），再表里单向链表，将key和链表中的每一个节点的key进行对比。若key存在Entry链表中，则用该value值取代旧的value值；若key不存在Entry链表中，则新建一个key-value节点，并将该节点插入Entry链表的表头位置。
+		</div>
+		<div><br />
+		</div>
+		<div><span style="font-size: x-large; font-weight: bold;">不同点</span>
+		</div>
+		<div><span style="font-size: large; font-weight: bold;">1.继承和实现方式不同</span>
+		</div>
+		<div>HashMap定义如下：
+		</div>
+		<div>
+			<pre>
+<code id="ID_16329FE11C1" class="lang-java hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HashMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">Map</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;, <span class="hljs-title">Cloneable</span>, <span class="hljs-title">Serializable</span></span></code></pre>
+			<div>Hashtable定义如下：
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_16329FF0FFD" class="lang-java hljs"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Hashtable</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">Dictionary</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">Map</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;, <span class="hljs-title">Cloneable</span>, <span class="hljs-title">java</span>.<span class="hljs-title">io</span>.<span class="hljs-title">Serializable</span></span></code></pre>
+			<div>从中，我们可以看出
+			</div>
+		</div>
+		<div>
+			<ul>
+				<li>HashMap和Hashtable都实现了Map、Cloneable、java.io.Serializable接口
+				</li>
+				<li>HashMap继承于AbstractMap，而Hashtable继承于Dictionary
+				</li>
+			</ul>
+			<div><span style="font-size: large; font-weight: bold;">2.线程安全不同</span>
+			</div>
+		</div>
+		<div>
+			<ul>
+				<li>Hashtable的几乎所有函数都是同步的，即它是线程安全的，支持多线程。
+				</li>
+				<li>HashMap的函数则是非同步的，它不是线程安全的。若要在多线程中使用HashMap，需要我们额外的进行同步处理。对HashMap的同步处理可以使用Collections类提供的synchronizedMap静态方法，或者直接使用JDK5.0之后提供的java.util.concurrent包里的ConcurrentHashMap类
+				</li>
+			</ul>
+			<div><span style="font-size: large; font-weight: bold;">3.对null值得处理不同</span>
+			</div>
+		</div>
+		<div>
+			<ul>
+				<li>HashMap的key、value都可以为null
+				</li>
+				<li>Hashtable的key、value都不可以为null
+				</li>
+			</ul>
+			<div>HashMap的添加key-value的方法：
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A03FD70" class="lang-java hljs"><ol><li><span class="hljs-function"><span class="hljs-keyword">public</span> V <span class="hljs-title">put</span><span class="hljs-params">(K key, V value)</span> </span>{</li><li>    <span class="hljs-keyword">if</span> (table == EMPTY_TABLE) {</li><li>        inflateTable(threshold);</li><li>    }</li><li>    <span class="hljs-comment">//如果key为null，调用putForNullKey方法进行处理</span></li><li>    <span class="hljs-keyword">if</span> (key == <span class="hljs-keyword">null</span>)</li><li>        <span class="hljs-keyword">return</span> putForNullKey(value);</li><li>    <span class="hljs-comment">//根据key计算Hash值</span></li><li>    <span class="hljs-keyword">int</span> hash = hash(key);</li><li>    <span class="hljs-comment">//搜索指定hash值在对应table中的索引</span></li><li>    <span class="hljs-keyword">int</span> i = indexFor(hash, table.length);</li><li>    <span class="hljs-comment">//如果i索引处的Entry不为null，通过循环不断遍历e元素的下一个元素</span></li><li>    <span class="hljs-keyword">for</span> (Entry&lt;K,V&gt; e = table[i]; e != <span class="hljs-keyword">null</span>; e = e.next) {</li><li>        Object k;</li><li>    <span class="hljs-comment">//找到指定key与需要放入的key相等(hash值相同，通过equals比较放回true)</span></li><li>        <span class="hljs-keyword">if</span> (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) {</li><li>            V oldValue = e.value;</li><li>            e.value = value;</li><li>            e.recordAccess(<span class="hljs-keyword">this</span>);</li><li>            <span class="hljs-keyword">return</span> oldValue;</li><li>        }</li><li>    }</li><li>    <span class="hljs-comment">//如果i索引处的Entry为null，表明此处还没有Entry</span></li><li>    modCount++;</li><li>    <span class="hljs-comment">//将key、value添加到i索引处</span></li><li>    addEntry(hash, key, value, i);</li><li>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</li><li>}</li></ol></code></pre>
+			<div>Hashtable的添加key-value的方法：
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A04B200" class="lang-java hljs"><ol><li><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> V <span class="hljs-title">put</span><span class="hljs-params">(K key, V value)</span> </span>{</li><li>    <span class="hljs-comment">// 确保value不为空，否则抛异常</span></li><li>    <span class="hljs-keyword">if</span> (value == <span class="hljs-keyword">null</span>) {</li><li>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointerException();</li><li>    }</li><li></li><li>    <span class="hljs-comment">//确保key不在hashtable中</span></li><li>        <span class="hljs-comment">//首先，通过hash方法计算key的哈希值，并计算得出index值，确定其在table[]中的位置</span></li><li>        <span class="hljs-comment">//其次，迭代index索引位置的链表，如果该位置处的链表存在相同的key，则替换value，返回旧的value</span></li><li>    Entry tab[] = table;</li><li>    <span class="hljs-keyword">int</span> hash = key.hashCode();</li><li>    <span class="hljs-keyword">int</span> index = (hash &amp; <span class="hljs-number">0x7FFFFFFF</span>) % tab.length;</li><li>    <span class="hljs-keyword">for</span> (Entry&lt;K,V&gt; e = tab[index] ; e != <span class="hljs-keyword">null</span> ; e = e.next) {</li><li>        <span class="hljs-keyword">if</span> ((e.hash == hash) &amp;&amp; e.key.equals(key)) {</li><li>        V old = e.value;</li><li>        e.value = value;</li><li>        <span class="hljs-keyword">return</span> old;</li><li>        }</li><li>    }</li><li></li><li>    modCount++;</li><li>    <span class="hljs-keyword">if</span> (count &gt;= threshold) {</li><li>        <span class="hljs-comment">// 若超过阈值，则进行rehash扩容操作</span></li><li>        rehash();</li><li></li><li>            tab = table;</li><li>            index = (hash &amp; <span class="hljs-number">0x7FFFFFFF</span>) % tab.length;</li><li>    }</li><li></li><li>    <span class="hljs-comment">// 将Hashtable中index位置的Entry(链表)保存到e中</span></li><li>    Entry&lt;K,V&gt; e = tab[index];</li><li>    tab[index] = <span class="hljs-keyword">new</span> Entry&lt;K,V&gt;(hash, key, value, e);</li><li>    count++;</li><li>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;</li><li>}</li></ol></code></pre>
+			<div>从上面代码可以看出：
+			</div>
+		</div>
+		<div>
+			<ul>
+				<li>Hashtable的key或value，都不能为null，否则，会抛出议程NullPointerException。
+				</li>
+				<li>HashMap的key、value都可以为null。当HashMap的key为null时，HashMap会将其固定地插入table[0]位置（即HashMap散列表的第一个位置）；而且table[0]处只会容纳一个key为null的值，当有多个key为null的值插入的时候，table[0]会保留最后插入的value。
+				</li>
+			</ul>
+		</div>
+		<div><span style="font-size: large; font-weight: bold;">4.支持的遍历种类不同</span>
+		</div>
+		<div>
+			<ul>
+				<li>HashMap只支持Iterator（迭代器）遍历
+				</li>
+				<li>Hashtable支持Iterator（迭代器）和Enumeration（枚举器）两种方式遍历
+				</li>
+			</ul>
+			<div><span style="font-size: large; font-weight: bold;">5.容量的初始值和方式都不一样</span>
+			</div>
+		</div>
+		<div>
+			<ul>
+				<li>HashMap默认的容量大小是16；增加容量时，每次将容量变为“原始容量x2”。
+				</li>
+				<li>Hashtable默认的容量大小是11；增加容量时，每次将容量变为“原始容量x2+1”。
+				</li>
+			</ul>
+			<div><span style="font-size: large; font-weight: bold;">6.添加key-value时的hash值算法不同</span>
+			</div>
+		</div>
+		<div>
+			<ul>
+				<li>HashMap添加元素时，是使用自定义的哈希算法。
+				</li>
+				<li>Hashtable没有自定义哈希算法，而直接采用的key的hashCode()。
+				</li>
+			</ul>
+			<div>HashMap添加元素时，是使用自定义的哈希算法：
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A0C0EF7" class="lang-java hljs"><ol><li><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hash</span><span class="hljs-params">(<span class="hljs-keyword">int</span> h)</span> </span>{</li><li>     h ^= (h &gt;&gt;&gt; <span class="hljs-number">20</span>) ^ (h &gt;&gt;&gt; <span class="hljs-number">12</span>);</li><li>     <span class="hljs-keyword">return</span> h ^ (h &gt;&gt;&gt; <span class="hljs-number">7</span>) ^ (h &gt;&gt;&gt; <span class="hljs-number">4</span>);</li><li>}</li><li></li><li><span class="hljs-keyword">int</span> hash = hash(key.hashCode());</li></ol></code></pre>
+			<div>Hashtable没有自定义哈希算法，而直接采用的key的hashCode()。
+			</div>
+		</div>
+		<div>
+			<pre>
+<code id="ID_1632A0CB113" class="lang-java hljs"><span class="hljs-keyword">int</span> hash = key.hashCode();</code></pre>
+			<div><br />
+			</div>
+		</div>
+	</body>
+</html>
