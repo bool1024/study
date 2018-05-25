@@ -62,3 +62,10 @@ try{
 	- 直接比较`if(start.before(end))`
 	- 用date.getTime()返回long相加减或者直接比较或者用compareTo
 	- 转换成字符串，然后字符串比较
+
+#### 判断日期是星期几
+```
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(date);
+int weekOfDay = calendar.get(Calendar.DAY_OF_WEEK); //星期一到星期天对应2345671
+```
