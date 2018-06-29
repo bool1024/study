@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="file:///${exe}/scripts/highlight.styles/${SyntaxHighlightStyleName}.css" />
+		<style>
+			body, table{font-family: 微软雅黑}
+			
+			table{border-collapse: collapse; border: 1px solid gray; border-width: 2px 1px 2px 1px;}
+			th{border: 1px solid gray; padding: 4px; background-color: #ddd;}
+			td{border: 1px solid gray; padding: 4px;}
+			tr:nth-child(2n){background-color: #f8f8f8;}
+			pre{border: 2px solid #d6d6d6; padding: 0px; border-radius: 3px;}
+		</style>
+	</head>
+	<body style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+		<div>常见问题：
+		</div>
+		<div>1.maven工程中spring读取applicationContext.xml时需要将applicationContext.xml文件放入src/main/resources中
+		</div>
+		<div>2.lazy-init:false表示spring启动时立刻实例化（lazy-init设置只对scop属性为singleton的bean起作用）
+		</div>
+		<div>3.不要在spring的配置里配置上XSD的版本号，因为如果没有配置版本号，取得就是当前jar里的XSD文件，减少了各种风险。而且这样<span style="color: #ff0000">约定大于配置</span>的方式很优雅。
+		</div>
+		<div>4.spring启动时执行函数的配置:（启动时执行com.huawei.u2020.nbiinventoryservice.job.JobManager中的init函数）
+		</div>
+		<div>
+			<pre>
+<code id="ID_162F023CC1B" class="lang-xml hljs"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"initjob"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.huawei.u2020.nbiinventoryservice.job.JobManager"</span> <span class="hljs-attr">init-method</span>=<span class="hljs-string">"init"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre>
+			<div>5.java.lang.ClassNotFoundException: org.springframework.web.servlet.DispatcherServlet解决：添加servlet-api.jar
+			</div>
+			<div>6.org.springframework.web.servlet.DispatcherServlet cannot be cast to javax.servlet.Servlet解决：（与tomcat自带的servlet-api冲突）
+			</div>
+			<div>
+				<pre>
+<code id="ID_16440962A3F" class="lang-xml hljs"><ol><li><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></li><li>  <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>javax.servlet<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></li><li>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>javax.servlet-api<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></li><li>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></li><li><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></li></ol></code></pre>
+				<div>修改为（加上scope）
+				</div>
+			</div>
+			<div>
+				<pre>
+<code id="ID_1644096CF0F" class="lang-xml hljs"><ol><li><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span></li><li><span class="hljs-tag">  &lt;<span class="hljs-name">groupId</span>&gt;</span>javax.servlet<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span></li><li>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>javax.servlet-api<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span></li><li>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.1.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span></li><li>    <span class="hljs-tag">&lt;<span class="hljs-name">scope</span>&gt;</span>provided<span class="hljs-tag">&lt;/<span class="hljs-name">scope</span>&gt;</span></li><li><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></li></ol></code></pre>
+				<div>7.Could not resolve placeholder &apos;jdbc.driver&apos; in string &nbsp;value &quot;${jdbc.driver}&quot;
+				</div>
+				<div>错误缘由：在配置文件中，使用两次引入配置文件的扫描，但是两次扫描的key是一样的，并不能进行两次扫描
+				</div>
+				<div>解决方法一：将配置文件写法哦一个方法里，用“,”隔开
+				</div>
+				<div>
+					<pre>
+<code id="ID_164497A3A8F" class="lang-xml hljs"><span class="hljs-tag">&lt;<span class="hljs-name">context:property-placeholder</span> <span class="hljs-attr">location</span>=<span class="hljs-string">"classpath:config/resource.properties"</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">context:property-placeholder</span> <span class="hljs-attr">location</span>=<span class="hljs-string">"classpath:config/db.properties"</span> /&gt;</span></code></pre>
+					<div>解决方法二：在每个扫描的配置文件后加上ignore-unresolvable=&quot;true&quot;
+					</div>
+				</div>
+				<div>
+					<pre>
+<code id="ID_164497B19A4" class="lang-xml hljs"><span class="hljs-tag">&lt;<span class="hljs-name">context:property-placeholder</span> <span class="hljs-attr">location</span>=<span class="hljs-string">"classpath:config/resource.properties"</span> <span class="hljs-attr">ignore-unresolvable</span>=<span class="hljs-string">"true"</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">context:property-placeholder</span> <span class="hljs-attr">location</span>=<span class="hljs-string">"classpath:config/db.properties"</span> <span class="hljs-attr">gnore-unresolvable</span>=<span class="hljs-string">"true"</span> /&gt;</span></code></pre>
+					<div><br />
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
